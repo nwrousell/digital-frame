@@ -40,6 +40,7 @@ These instructions are for Raspberry Pi OS Lite. You won't need to install and m
 	5. `sudo systemctl enable getty@tty1.service`
 3. To execute `run.sh` on boot:
 	- `crontab -e` and add: `@reboot /path/to/digital-frame/run.sh >> /path/to/digital-frame/logfile.log 2>&1` to the bottom
+	- update the path in `run.sh` with the path to the `digital-frame` directory
 
 
 ## Settings
