@@ -32,14 +32,15 @@ These instructions are for Raspberry Pi OS Lite. You won't need to install and m
 	2. `sudo nano /etc/systemd/system/getty@tty1.service.d/override.conf`
 	3. Add config (replace `user` with the appropriate user):
 	```
-		[Service] 
-		ExecStart= 
-		ExecStart=-/sbin/agetty --noclear --autologin user %I $TERM
+	[Service] 
+	ExecStart= 
+	ExecStart=-/sbin/agetty --noclear --autologin user %I $TERM
 	```
 	4. `sudo systemctl daemon-reload`
 	5. `sudo systemctl enable getty@tty1.service`
 3. To execute `run.sh` on boot:
 	- `crontab -e` and add: `@reboot /path/to/digital-frame/run.sh >> /path/to/digital-frame/logfile.log 2>&1` to the bottom
+	- update the path in `run.sh` with the path to the `digital-frame` directory
 
 
 ## Settings

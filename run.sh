@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/noah/digital-frame
+cd /path/to/digital-frame # TODO: update this path
 source env/bin/activate
 
 nohup sudo startx -- -ac &
