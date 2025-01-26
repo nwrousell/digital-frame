@@ -33,27 +33,56 @@ def get_photos_from_album(album_id):
     creds = authenticate_google_photos()
     service = build("photoslibrary", "v1", credentials=creds, static_discovery=False)
 
-    # Fetch photos from the specified album
-    results = service.mediaItems().search(body={"albumId": album_id}).execute()
-    media_items = results.get("mediaItems", [])
-
+    page_token = None
     photos = []
-    for item in media_items:
-        photos.append({"filename": item["filename"], "baseUrl": item["baseUrl"]})
+
+    while True:
+        response = (
+            service.mediaItems()
+            .search(
+                body={
+                    "albumId": album_id,
+                    "pageSize": 100,
+                    "pageToken": page_token,
+                }
+            )
+            .execute()
+        )
+
+        if "mediaItems" in response:
+            photos.extend(
+                map(
+                    lambda item: {
+                        "filename": item["filename"],
+                        "baseUrl": item["baseUrl"],
+                    },
+                    response["mediaItems"],
+                )
+            )
+
+        # Check for a next page token to fetch more results
+        page_token = response.get("nextPageToken")
+        if not page_token:
+            break
+
     return photos
 
 
 def fetch_albums():
-    """fetch albums of user"""
+    """fetch regular and shared albums of user"""
 
     creds = authenticate_google_photos()
     service = build("photoslibrary", "v1", credentials=creds, static_discovery=False)
 
-    # Fetch the albums
-    results = service.albums().list(pageSize=10).execute()
+    # fetch user-owned and shared albums
+    results = service.albums().list(pageSize=50).execute()
     albums = results.get("albums", [])
 
-    return albums
+    # fetch shared albums
+    results = service.sharedAlbums().list(pageSize=50).execute()
+    shared_albums = results.get("sharedAlbums", [])
+
+    return albums, shared_albums
 
 
 def download_image(base_url, image_filename, width=None, height=None):
@@ -104,9 +133,16 @@ def photos_api_setup():
     authenticate_google_photos()
 
     print()
-    albums = fetch_albums()
-    for album in albums:
-        print(f"{album['title']} (id: {album['id']})")
+    owned_albums, shared_albums = fetch_albums()
+    print("OWNED ALBUMS:")
+    for album in owned_albums:
+        print(f"\t{album['title']} (id: {album['id']})")
+
+    print("\n\nSHARED ALBUMS:")
+    for album in shared_albums:
+        print(
+            f"\t{album['title'] if 'title' in album else '(Untitled)'} (id: {album['id']})"
+        )
 
 
 if __name__ == "__main__":
