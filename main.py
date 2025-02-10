@@ -2,7 +2,7 @@ import os
 from photos_api import download_new_images
 from slideshow import Slideshow
 
-ALBUM_ID = "APzSpbuJ3_T72v6E0tyJykeB7W4xxySa1Z9oHi33fUMcIBDcPb0D90MXeno296h5oacR4y9tX8-1"  # Digital Frame (Parents)
+ALBUM_ID = "<to be filled in>"  # TODO: fill this in
 
 BACKGROUND_COLOR = "#1919"
 IMAGE_DIR = "images"
