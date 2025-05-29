@@ -6,7 +6,10 @@ from googleapiclient.discovery import build
 import pickle
 
 # Scopes for Google Photos Library API
-SCOPES = ["https://www.googleapis.com/auth/photoslibrary.readonly"]
+SCOPES = [
+    "https://www.googleapis.com/auth/photoslibrary.readonly",
+    "https://www.googleapis.com/auth/photoslibrary"
+]
 
 
 def authenticate_google_photos():
